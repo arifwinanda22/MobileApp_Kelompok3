@@ -1,0 +1,2 @@
+/Users/arifwinanda/Documents/Belajar_Flutter/flutter_application_tubes2/android/app/.cxx/Debug/z3754296/x86_64/CMakeFiles/edit_cache.dir
+/Users/arifwinanda/Documents/Belajar_Flutter/flutter_application_tubes2/android/app/.cxx/Debug/z3754296/x86_64/CMakeFiles/rebuild_cache.dir

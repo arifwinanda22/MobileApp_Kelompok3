@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "810469287590",
+    "project_id": "smartcomp-eaab4",
+    "storage_bucket": "smartcomp-eaab4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:810469287590:android:f6a0c2a785237f7012f667",
+        "android_client_info": {
+          "package_name": "com.example.flutter_application_tubes2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAv-IQtaPYZsrEpM4cQkju93tNv1R8k_rI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

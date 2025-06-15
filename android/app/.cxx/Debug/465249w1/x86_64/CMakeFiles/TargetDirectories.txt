@@ -1,0 +1,2 @@
+C:/Users/Arif Lubis/Documents/PP/APB/flutter_application_tubes2/android/app/.cxx/Debug/465249w1/x86_64/CMakeFiles/edit_cache.dir
+C:/Users/Arif Lubis/Documents/PP/APB/flutter_application_tubes2/android/app/.cxx/Debug/465249w1/x86_64/CMakeFiles/rebuild_cache.dir
