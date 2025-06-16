@@ -1,121 +1,132 @@
-
-import 'package:flutter_application_tubes/firebase_service.dart';
+// models/competition.dart
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_application_tubes/Admin/dashboardAdmin.dart';
-import 'package:flutter_application_tubes/Competition/competitionAcademic.dart';
 
-
-// models/competition_model.dart
 class Competition {
-  final String id;
+  final String? id;
   final String title;
-  final String imageUrl;
   final String description;
-  final String price;
-  final List<String> prizes;
-  final List<String> requirements;
-  final String category; // 'academic' or 'non-academic'
-  final DateTime registrationDeadline;
-  final String location;
-  final String teamSize;
-  final String eligibility;
-  final bool isActive;
+  final String category;
+  final String prize;
+  final String imageUrl;
+  final DateTime deadline;
+  final String status;
+  final int participants;
   final DateTime createdAt;
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   Competition({
-    required this.id,
+    this.id,
     required this.title,
-    required this.imageUrl,
     required this.description,
-    required this.price,
-    required this.prizes,
-    required this.requirements,
     required this.category,
-    required this.registrationDeadline,
-    required this.location,
-    required this.teamSize,
-    required this.eligibility,
-    this.isActive = true,
+    required this.prize,
+    required this.imageUrl,
+    required this.deadline,
+    required this.status,
+    required this.participants,
     required this.createdAt,
-    required this.updatedAt,
+    this.updatedAt,
   });
 
-  // Convert to Map for Firebase
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'imageUrl': imageUrl,
-      'description': description,
-      'price': price,
-      'prizes': prizes,
-      'requirements': requirements,
-      'category': category,
-      'registrationDeadline': registrationDeadline.toIso8601String(),
-      'location': location,
-      'teamSize': teamSize,
-      'eligibility': eligibility,
-      'isActive': isActive,
-      'createdAt': createdAt.toIso8601String(),
-      'updatedAt': updatedAt.toIso8601String(),
-    };
-  }
-
-  // Create from Map (Firebase)
-  factory Competition.fromMap(Map<String, dynamic> map) {
+  // Factory constructor untuk membuat Competition dari Map/JSON
+  factory Competition.fromJson(Map<String, dynamic> json) {
     return Competition(
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      imageUrl: map['imageUrl'] ?? '',
-      description: map['description'] ?? '',
-      price: map['price'] ?? '',
-      prizes: List<String>.from(map['prizes'] ?? []),
-      requirements: List<String>.from(map['requirements'] ?? []),
-      category: map['category'] ?? '',
-      registrationDeadline: DateTime.parse(map['registrationDeadline']),
-      location: map['location'] ?? '',
-      teamSize: map['teamSize'] ?? '',
-      eligibility: map['eligibility'] ?? '',
-      isActive: map['isActive'] ?? true,
-      createdAt: DateTime.parse(map['createdAt']),
-      updatedAt: DateTime.parse(map['updatedAt']),
+      id: json['id'],
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      category: json['category'] ?? 'academic',
+      prize: json['prize'] ?? '',
+      imageUrl: json['imageUrl'] ?? '',
+      deadline: json['deadline'] is Timestamp
+          ? (json['deadline'] as Timestamp).toDate()
+          : json['deadline'] is DateTime
+              ? json['deadline']
+              : DateTime.now().add(Duration(days: 30)),
+      status: json['status'] ?? 'active',
+      participants: json['participants'] ?? 0,
+      createdAt: json['createdAt'] is Timestamp
+          ? (json['createdAt'] as Timestamp).toDate()
+          : json['createdAt'] is DateTime
+              ? json['createdAt']
+              : DateTime.now(),
+      updatedAt: json['updatedAt'] is Timestamp
+          ? (json['updatedAt'] as Timestamp).toDate()
+          : json['updatedAt'] is DateTime
+              ? json['updatedAt']
+              : null,
     );
   }
 
-  // Copy with method for updates
+  // Factory constructor alternatif untuk fromMap
+  factory Competition.fromMap(Map<String, dynamic> map) {
+    return Competition.fromJson(map);
+  }
+
+  // Method untuk mengkonversi Competition ke Map/JSON
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'description': description,
+      'category': category,
+      'prize': prize,
+      'imageUrl': imageUrl,
+      'deadline': deadline,
+      'status': status,
+      'participants': participants,
+      'createdAt': createdAt,
+      'updatedAt': updatedAt,
+    };
+  }
+
+  // Method alternatif untuk toMap
+  Map<String, dynamic> toMap() {
+    return toJson();
+  }
+
+  // Method untuk mengkonversi ke Firestore (dengan Timestamp)
+  Map<String, dynamic> toFirestore() {
+    return {
+      'title': title,
+      'description': description,
+      'category': category,
+      'prize': prize,
+      'imageUrl': imageUrl,
+      'deadline': Timestamp.fromDate(deadline),
+      'status': status,
+      'participants': participants,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+    };
+  }
+
+  // Method copyWith untuk membuat salinan dengan perubahan
   Competition copyWith({
     String? id,
     String? title,
-    String? imageUrl,
     String? description,
-    String? price,
-    List<String>? prizes,
-    List<String>? requirements,
     String? category,
-    DateTime? registrationDeadline,
-    String? location,
-    String? teamSize,
-    String? eligibility,
-    bool? isActive,
+    String? prize,
+    String? imageUrl,
+    DateTime? deadline,
+    String? status,
+    int? participants,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
     return Competition(
       id: id ?? this.id,
       title: title ?? this.title,
-      imageUrl: imageUrl ?? this.imageUrl,
       description: description ?? this.description,
-      price: price ?? this.price,
-      prizes: prizes ?? this.prizes,
-      requirements: requirements ?? this.requirements,
       category: category ?? this.category,
-      registrationDeadline: registrationDeadline ?? this.registrationDeadline,
-      location: location ?? this.location,
-      teamSize: teamSize ?? this.teamSize,
-      eligibility: eligibility ?? this.eligibility,
-      isActive: isActive ?? this.isActive,
+      prize: prize ?? this.prize,
+      imageUrl: imageUrl ?? this.imageUrl,
+      deadline: deadline ?? this.deadline,
+      status: status ?? this.status,
+      participants: participants ?? this.participants,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? DateTime.now(),
+      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 }

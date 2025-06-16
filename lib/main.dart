@@ -21,6 +21,7 @@ import 'profil.dart';
 import 'forum.dart';
 import 'calendar.dart';
 import 'firebase_options.dart';
+import 'package:flutter_application_tubes/Admin/competitionManagement.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -78,6 +79,7 @@ class SmartCompApp extends StatelessWidget {
         '/profil': (context) => ProfilePage(),
         '/forum': (context) => FeedbackScreen(),
         '/calendar': (context) => CalendarScreen(),
+        '/competitionManagement': (context) => CompetitionManagement(),
       },
       onGenerateRoute: (settings) {
         if (settings.name == '/workshopDetail') {
